@@ -35,6 +35,8 @@ RUN npm install --only=production
 # Copy configurations
 COPY nginx.conf /etc/nginx/sites-available/default
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY test_cases.json /app/test_cases.json
+COPY policy_terms.json /app/policy_terms.json
 
 # Create data directory for SQLite database persistence
 RUN mkdir -p /app/backend/data && chmod -R 777 /app/backend/data
