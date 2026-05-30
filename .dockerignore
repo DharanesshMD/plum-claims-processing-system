@@ -1,0 +1,15 @@
+.git
+.gitignore
+.venv
+node_modules
+frontend/node_modules
+.next
+frontend/.next
+claims.db
+backend/claims.db
+backend/data
+*.log
+.DS_Store
+.pytest_cache
+__pycache__
+backend/__pycache__

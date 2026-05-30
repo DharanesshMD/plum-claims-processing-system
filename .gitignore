@@ -1,0 +1,53 @@
+# Python environments
+.venv/
+env/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.pyre/
+.pytype/
+
+# SQLite databases
+*.db
+*.db-journal
+claims.db
+backend/claims.db
+
+# Uploaded documents (runtime data, not source code)
+backend/data/uploads/
+
+# Local configuration
+.env
+backend/.env
+
+# Node & Next.js build files
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+frontend/build/
+frontend/.env*
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -1,0 +1,40 @@
+[project]
+name = "plum-claims-backend"
+version = "1.0.0"
+description = "AI-powered multi-agent health insurance claims processing system"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "sqlalchemy>=2.0.0",
+    "aiosqlite>=0.20.0",
+    "langgraph>=0.4.0",
+    "langchain-core>=0.3.0",
+    "google-genai>=1.0.0",
+    "python-multipart>=0.0.12",
+    "thefuzz[speedup]>=0.22.0",
+    "httpx>=0.28.0",
+    "cursor-sdk>=0.1.5",
+    "google-antigravity>=0.1.1",
+    "openai>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
