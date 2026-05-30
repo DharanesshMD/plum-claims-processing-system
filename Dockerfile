@@ -1,5 +1,5 @@
 # Multi-stage build for Next.js Frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
@@ -13,15 +13,17 @@ FROM python:3.12-slim
 
 # Install system dependencies, Node.js (for Next.js runtime), Nginx, and Supervisor
 RUN apt-get update && apt-get install -y curl gnupg && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs nginx supervisor && \
     rm -rf /var/lib/apt/lists/*
 
 # Set up backend
 WORKDIR /app/backend
-COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/pyproject.toml ./
+RUN mkdir app && touch app/__init__.py && pip install --no-cache-dir .
 COPY backend/ ./
+RUN pip install --no-cache-dir .
+
 
 # Set up frontend production runtime
 WORKDIR /app/frontend

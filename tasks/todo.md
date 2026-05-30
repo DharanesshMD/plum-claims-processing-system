@@ -48,8 +48,8 @@
 ## Phase 16: Public GitHub Repository Push
 - [x] Initialize git repository at workspace root
 - [x] Configure local git user details (DharanesshMD / dharanessh.md@gmail.com)
-- [ ] Add all source files (verifying .gitignore is respected)
-- [ ] Commit files locally
-- [ ] Create a public repository on GitHub using `gh repo create`
-- [ ] Push local repository to GitHub
+- [x] Add all source files (verifying .gitignore is respected)
+- [x] Commit files locally
+- [x] Create a public repository on GitHub using `gh repo create`
+- [x] Push local repository to GitHub
 

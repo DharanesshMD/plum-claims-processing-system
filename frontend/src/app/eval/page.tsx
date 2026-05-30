@@ -30,6 +30,9 @@ interface TestCaseResult {
   checks?: Array<{ passed: boolean; check: string; expected?: any; actual?: any }>;
   full_decision?: any;
   error?: string;
+  thinking?: string;
+  description?: string;
+  input?: any;
 }
 
 function RunningProgressBar({ active }: { active: boolean }) {
