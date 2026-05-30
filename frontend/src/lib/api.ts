@@ -41,3 +41,19 @@ export async function runEval() {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function uploadDocument(file: File): Promise<{ file_id: string; file_name: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API_BASE}/api/documents/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({ detail: "Upload failed" }));
+    throw new Error(errData.detail || "Upload failed");
+  }
+  return res.json();
+}
+

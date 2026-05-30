@@ -35,6 +35,7 @@ RUN npm install --only=production
 # Copy configurations
 COPY nginx.conf /etc/nginx/sites-available/default
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY wait_for_services.py /app/wait_for_services.py
 COPY test_cases.json /app/test_cases.json
 COPY policy_terms.json /app/policy_terms.json
 

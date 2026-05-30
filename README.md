@@ -255,3 +255,4 @@ For additional details regarding specific components and results, refer to the f
 - [ARCHITECTURE.md](./ARCHITECTURE.md): Visual block diagrams, schema models, and calculation details.
 - [COMPONENT_CONTRACTS.md](./COMPONENT_CONTRACTS.md): Detailed inputs, outputs, and type structures for all agents.
 - [EVAL_REPORT.md](./EVAL_REPORT.md): Complete summary of evaluation runs with assertions and test case logic.
+- [DEPLOYMENT.md](./DEPLOYMENT.md): Detailed single-container Docker setup and Google Cloud Run deployment instructions, including cold-start 502 troubleshooting.

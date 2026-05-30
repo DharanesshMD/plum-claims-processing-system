@@ -53,3 +53,39 @@
 - [x] Create a public repository on GitHub using `gh repo create`
 - [x] Push local repository to GitHub
 
+## Phase 17: Cloud Run Deployment & Troubleshooting
+- [x] Build Docker image targeting `linux/amd64` architecture
+- [x] Tag the image for Google Artifact Registry
+- [x] Push the `linux/amd64` image to Artifact Registry
+- [x] Deploy the image to Google Cloud Run with persistent storage and environment variables
+- [x] Verify the service is up and serving without 502/CORS errors
+
+## Phase 18: Migrate LLM Provider to Cursor SDK
+- [x] Update Cloud Run environment variables to set LLM_PROVIDER=cursor
+- [x] Verify evaluation speed and correctness under Cursor SDK
+
+## Phase 19: Fix Deployed Upload CORS Issue
+- [x] Create and export uploadDocument function in frontend api.ts
+- [x] Use uploadDocument in new/page.tsx to resolve hardcoded localhost URL
+- [x] Rebuild and tag the linux/amd64 Docker image
+- [x] Push the new image to Google Artifact Registry
+- [x] Redeploy the service to Cloud Run
+- [x] Verify document uploads work on the live URL
+
+## Phase 20: Fix Database Path and GCS Persistence
+- [x] Fix database.py default database URL to dynamically use Settings
+- [x] Rebuild and tag the linux/amd64 Docker image
+- [x] Push the new image to Google Artifact Registry
+- [x] Redeploy the service to Cloud Run
+- [x] Use in-memory SQLite to avoid GCS FUSE issues
+- [x] Clear the database and verify it works
+
+## Phase 21: Prevent Cold Start 502 Bad Gateway
+- [x] Create wait_for_services.py script to wait for port 8000 and 3000 to be ready
+- [x] Update Dockerfile to copy wait_for_services.py to the container
+- [x] Update supervisord.conf to wait for wait_for_services.py before starting Nginx
+- [x] Rebuild local docker image to test
+- [x] Rebuild and tag the linux/amd64 Docker image for Cloud Run
+- [x] Push the new image to Google Artifact Registry
+- [x] Redeploy the service to Cloud Run
+- [x] Verify that cold starts no longer cause 502 Gateway errors

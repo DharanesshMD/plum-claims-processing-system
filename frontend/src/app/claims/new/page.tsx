@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { submitClaim, submitClaimStream } from "@/lib/api";
+import { submitClaim, submitClaimStream, uploadDocument } from "@/lib/api";
 import type { ClaimDecision } from "@/lib/types";
 
 const CATEGORIES = [
@@ -92,20 +92,7 @@ export default function NewClaimPage() {
     setUploadedFiles((prev) => [...prev, newEntry]);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("http://localhost:8000/api/documents/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({ detail: "Upload failed" }));
-        throw new Error(errData.detail || "Upload failed");
-      }
-
-      const data = await res.json();
+      const data = await uploadDocument(file);
 
       setUploadedFiles((prev) =>
         prev.map((f) =>

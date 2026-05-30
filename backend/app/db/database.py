@@ -6,6 +6,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Float, String, Text, create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from app.config import get_settings
 
 
 class Base(DeclarativeBase):
@@ -32,15 +33,63 @@ _engine = None
 _SessionLocal = None
 
 
-def get_engine(database_url: str = "sqlite:///./claims.db"):
+def get_engine(database_url: str = None):
     global _engine
     if _engine is None:
-        _engine = create_engine(database_url, echo=False)
+        import sqlite3
+        from pathlib import Path
+        from sqlalchemy import event
+
+        if database_url is None:
+            database_url = get_settings().database_url
+
+        # Convert async SQLite URL to sync URL for SQLAlchemy
+        # Strip +aiosqlite prefix and any query params for the engine URL
+        sync_url = database_url
+        if sync_url.startswith("sqlite+aiosqlite:///"):
+            sync_url = sync_url.replace("sqlite+aiosqlite:///", "sqlite:///")
+
+        # Strip query params from the SQLAlchemy URL (e.g. ?nolock=1)
+        # We'll pass these directly to sqlite3 via URI mode
+        base_url = sync_url.split("?")[0]
+
+        # Extract the file path from the URL (handles both relative and absolute paths)
+        # sqlite:////absolute/path -> /absolute/path
+        # sqlite:///./relative -> ./relative
+        if base_url.startswith("sqlite:////"):
+            db_path = base_url[len("sqlite:///"):]   # keep leading /
+        elif base_url.startswith("sqlite:///"):
+            db_path = base_url[len("sqlite:///"):]   # relative path
+        else:
+            db_path = base_url[len("sqlite:"):]
+
+        # Ensure the parent directory exists
+        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+
+        # Build the SQLite URI with nolock=1 to bypass GCS FUSE locking issues
+        sqlite_uri = f"file:{db_path}?nolock=1"
+
+        def _creator():
+            return sqlite3.connect(sqlite_uri, uri=True, check_same_thread=False, timeout=30)
+
+        _engine = create_engine("sqlite://", creator=_creator, echo=False)
+
+        # Set GCS-FUSE-safe pragmas on every new connection:
+        # - journal_mode=MEMORY: no journal file written to disk, no lock files
+        # - synchronous=OFF: no fsync() calls that block on network filesystems
+        # This makes SQLite safe on GCS FUSE which doesn't support fcntl() locks
+        @event.listens_for(_engine, "connect")
+        def _set_sqlite_pragma(dbapi_conn, _connection_record):
+            cursor = dbapi_conn.cursor()
+            cursor.execute("PRAGMA journal_mode=MEMORY")
+            cursor.execute("PRAGMA synchronous=OFF")
+            cursor.close()
+
         Base.metadata.create_all(_engine)
     return _engine
 
 
-def get_session(database_url: str = "sqlite:///./claims.db") -> Session:
+def get_session(database_url: str = None) -> Session:
     global _SessionLocal
     if _SessionLocal is None:
         engine = get_engine(database_url)
@@ -48,7 +97,7 @@ def get_session(database_url: str = "sqlite:///./claims.db") -> Session:
     return _SessionLocal()
 
 
-def save_claim(decision_dict: dict, database_url: str = "sqlite:///./claims.db"):
+def save_claim(decision_dict: dict, database_url: str = None):
     """Save a claim decision to the database."""
     session = get_session(database_url)
     try:
@@ -69,7 +118,7 @@ def save_claim(decision_dict: dict, database_url: str = "sqlite:///./claims.db")
         session.close()
 
 
-def get_claim(claim_id: str, database_url: str = "sqlite:///./claims.db") -> dict | None:
+def get_claim(claim_id: str, database_url: str = None) -> dict | None:
     """Retrieve a claim decision from the database."""
     session = get_session(database_url)
     try:
@@ -81,7 +130,7 @@ def get_claim(claim_id: str, database_url: str = "sqlite:///./claims.db") -> dic
         session.close()
 
 
-def list_claims(database_url: str = "sqlite:///./claims.db") -> list[dict]:
+def list_claims(database_url: str = None) -> list[dict]:
     """List all claims."""
     session = get_session(database_url)
     try:
