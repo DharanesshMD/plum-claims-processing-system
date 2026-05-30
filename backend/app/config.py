@@ -36,8 +36,12 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "sqlite+aiosqlite:///./claims.db"
 
-    # CORS
-    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:3001"]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+    ]
 
     # Paths
     policy_terms_path: str = os.path.join(

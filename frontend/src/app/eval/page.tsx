@@ -81,7 +81,7 @@ export default function EvalPage() {
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiBase = process.env.NEXT_PUBLIC_API_URL !== undefined ? process.env.NEXT_PUBLIC_API_URL : "http://localhost:8000";
     fetch(`${apiBase}/api/claims/eval/cases`)
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch cases");
@@ -136,7 +136,7 @@ export default function EvalPage() {
     }
 
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiBase = process.env.NEXT_PUBLIC_API_URL !== undefined ? process.env.NEXT_PUBLIC_API_URL : "http://localhost:8000";
       const res = await fetch(`${apiBase}/api/claims/eval`, {
         method: "POST",
       });
